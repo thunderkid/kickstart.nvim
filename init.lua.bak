@@ -284,7 +284,6 @@ vim.opt.hlsearch = false
 vim.keymap.set("n", "<leader>nt", vim.cmd.Neotree)
 vim.keymap.set("n", "<leader>tt", "<CMD>Neotree toggle<CR>")
 vim.keymap.set("n", "<leader>tr", "<CMD>Neotree reveal<CR>")
-vim.keymap.set("n", "<leader>tw", "<CMD>Neotree reveal current<CR>")
 
 local function generate_file_info()
     local path = vim.fn.expand('%:p')
@@ -350,51 +349,6 @@ end
 
 -- 2. Set the key binding to call the Lua function
 vim.keymap.set('n', '<leader>tc', open_terminal_in_current_file_dir, { noremap = true, silent = true, desc = 'Open terminal in current file directory' })
-
-
-local function open_in_vscode()
-    local filename = vim.fn.expand('%:p') -- get the full path of the current file
-    vim.cmd('!code ' .. filename)
-end
-
-vim.keymap.set('n', '<leader>tv', open_in_vscode, { noremap = true, silent = true, desc =  'Open current file in VSCode' })
-
-_G.open_tmux_pane_with_node_dirpus = function()
-    local node_path = vim.fn.expand('%:p:h') -- Get the path of the current file in NeoTree
-    local tmux_cmd = "tmux split-window -h -c " .. node_path
-    --vim.cmd('silent !' .. tmux_cmd) -- Run the tmux command
-    vim.cmd('echo \' thing is ' .. tmux_cmd .. '\'')
-end
-
-
-_G.open_tmux_pane_with_node_dir = function()
-    local state = require("neo-tree.sources.manager").get_state("filesystem")
-    local node_path = state.path or ""
-
-    if node_path == "" then
-        vim.api.nvim_err_writeln("Couldn't fetch the path from NeoTree")
-        return
-    end
-
-    -- Open a new tmux pane with the fetched directory
-    local tmux_cmd = "tmux split-window -h -c '" .. node_path .. "'"
-    -- vim.cmd('echo \' thing is ' .. tmux_cmd .. '\'')
-    -- vim.cmd('echo \' thing is bad \'')
-    vim.cmd('silent !' .. tmux_cmd)
-
-    vim.cmd('echo \' thing is ' .. state .. '\'')
-end
-
-vim.keymap.set('n', '<leader>tm', open_tmux_pane_with_node_dir, { noremap = true, silent = true, desc =  'Open tmux pane at current directory' })
-
-
-vim.cmd [[
-  augroup NeoTreeMappings
-    autocmd!
-    autocmd FileType neo-tree echo "NeoTree buffer detected!" | nnoremap <buffer> B :lua _G.open_tmux_pane_with_node_dir()<CR>
-  augroup END
-]]
-
 
 
 -- /thunderstuff

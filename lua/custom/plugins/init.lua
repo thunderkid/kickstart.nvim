@@ -15,6 +15,27 @@ return {
     "MunifTanjim/nui.nvim",
   },
   config = function ()
-    require('neo-tree').setup {}
+    require('neo-tree').setup {
+      default_component_configs = {
+        symlink_target = {
+          enabled = true
+        }
+      },
+
+      filesystem = {
+        window = {
+          mappings = {
+            ["?"] = function(state)
+            local node = state.tree:get_node()
+
+             local folder_name = node.type == 'directory' and node.path or (node.path:match("(.*%/).*") or "")
+--              print(node.type, node.path, folder_name)
+             local tmux_cmd = "tmux split-window -h -c " .. folder_name
+             vim.cmd('silent !' .. tmux_cmd) -- Run the tmux command
+          end
+          }
+        }
+      }
+    }
   end,
 }
