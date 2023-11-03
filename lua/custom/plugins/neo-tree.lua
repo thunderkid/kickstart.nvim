@@ -23,22 +23,28 @@ return {
       },
 
       filesystem = {
-        
+        -- change synchronization bindings so that changing root in tree changes the current dir in neovim.
+        -- this makes sf for fuzzy search etc just apply to the root shown in neotree
+        -- see https://github.com/nvim-neo-tree/neo-tree.nvim/blob/main/doc/neo-tree.txt
         bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root
         cwd_target = {
           sidebar = "global",   -- sidebar is when position = left or right
           current = "global" -- current is when position = current
         },
+
         window = {
           mappings = {
-            ["l"] = function(state)
-            local node = state.tree:get_node()
+            ["b"] = {
+              function(state)
+                local node = state.tree:get_node()
 
-             local folder_name = node.type == 'directory' and node.path or (node.path:match("(.*%/).*") or "")
---              print(node.type, node.path, folder_name)
-             local tmux_cmd = "tmux split-window -h -c " .. folder_name
-             vim.cmd('silent !' .. tmux_cmd) -- Run the tmux command
-          end
+                local folder_name = node.type == 'directory' and node.path or (node.path:match("(.*%/).*") or "")
+                --              print(node.type, node.path, folder_name)
+                local tmux_cmd = "tmux split-window -h -c " .. folder_name
+                vim.cmd('silent !' .. tmux_cmd) -- Run the tmux command
+              end,
+              desc = 'open tmux pane at folder'
+            }
           }
         }
       }
