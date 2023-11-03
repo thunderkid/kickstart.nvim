@@ -281,10 +281,13 @@ vim.opt.relativenumber = true
 
 vim.opt.hlsearch = false
 
-vim.keymap.set("n", "<leader>nt", vim.cmd.Neotree)
-vim.keymap.set("n", "<leader>tt", "<CMD>Neotree toggle<CR>")
-vim.keymap.set("n", "<leader>tr", "<CMD>Neotree reveal<CR>")
-vim.keymap.set("n", "<leader>tw", "<CMD>Neotree reveal current<CR>")
+-- vim.keymap.set("n", "<leader>nt", vim.cmd.Neotree)
+vim.keymap.set("n", "<leader>ts", "<CMD>Neotree close<CR><CMD>Neotree reveal<CR>", { desc = 'Neotree sidebar' }) 
+vim.keymap.set("n", "<leader>tw", "<CMD>Neotree close<CR><CMD>Neotree reveal current<CR>", { desc = 'Neotree full width' }) 
+vim.keymap.set("n", "<leader>tt", "<CMD>Neotree toggle<CR>") 
+vim.keymap.set("n", "<leader>tq", "<CMD>Neotree close<CR>") 
+-- vim.keymap.set("n", "<leader>tr", "<CMD>Neotree reveal<CR>")
+-- vim.keymap.set("n", "<leader>tw", "<CMD>Neotree reveal current<CR>")
 
 local function generate_file_info()
     local path = vim.fn.expand('%:p')
@@ -338,13 +341,10 @@ end
 vim.keymap.set('n', '<leader>fi', show_file_info, { desc = '[F]iley [I]nfo' })
 
 
--- 1. Define the function in Lua
 local function open_terminal_in_current_file_dir()
     -- Get the directory of the current file
     local dir = vim.fn.expand('%:p:h')
-    -- Change to that directory
     vim.cmd('cd ' .. dir)
-    -- Open the terminal
     vim.cmd('term')
 end
 
@@ -357,45 +357,15 @@ local function open_in_vscode()
     vim.cmd('!code ' .. filename)
 end
 
+local function open_tmux_pane_in_current_file_dir()
+    
+    local dir = vim.fn.expand('%:p:h')
+    local tmux_cmd = "tmux split-window -h -c " .. dir
+             vim.cmd('silent !' .. tmux_cmd) -- Run the tmux command
+end 
+
 vim.keymap.set('n', '<leader>tv', open_in_vscode, { noremap = true, silent = true, desc =  'Open current file in VSCode' })
-
-_G.open_tmux_pane_with_node_dirpus = function()
-    local node_path = vim.fn.expand('%:p:h') -- Get the path of the current file in NeoTree
-    local tmux_cmd = "tmux split-window -h -c " .. node_path
-    --vim.cmd('silent !' .. tmux_cmd) -- Run the tmux command
-    vim.cmd('echo \' thing is ' .. tmux_cmd .. '\'')
-end
-
-
-_G.open_tmux_pane_with_node_dir = function()
-    local state = require("neo-tree.sources.manager").get_state("filesystem")
-    local node_path = state.path or ""
-
-    if node_path == "" then
-        vim.api.nvim_err_writeln("Couldn't fetch the path from NeoTree")
-        return
-    end
-
-    -- Open a new tmux pane with the fetched directory
-    local tmux_cmd = "tmux split-window -h -c '" .. node_path .. "'"
-    -- vim.cmd('echo \' thing is ' .. tmux_cmd .. '\'')
-    -- vim.cmd('echo \' thing is bad \'')
-    vim.cmd('silent !' .. tmux_cmd)
-
-    vim.cmd('echo \' thing is ' .. state .. '\'')
-end
-
-vim.keymap.set('n', '<leader>tm', open_tmux_pane_with_node_dir, { noremap = true, silent = true, desc =  'Open tmux pane at current directory' })
-
-
-vim.cmd [[
-  augroup NeoTreeMappings
-    autocmd!
-    autocmd FileType neo-tree echo "NeoTree buffer detected!" | nnoremap <buffer> B :lua _G.open_tmux_pane_with_node_dir()<CR>
-  augroup END
-]]
-
-
+vim.keymap.set('n', '<leader>tm', open_tmux_pane_in_current_file_dir, { noremap = true, silent = true, desc =  'Open tmux pane at current directory' })
 
 -- /thunderstuff
 
