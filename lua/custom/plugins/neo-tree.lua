@@ -23,9 +23,15 @@ return {
       },
 
       filesystem = {
+        
+        bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root
+        cwd_target = {
+          sidebar = "global",   -- sidebar is when position = left or right
+          current = "global" -- current is when position = current
+        },
         window = {
           mappings = {
-            ["?"] = function(state)
+            ["l"] = function(state)
             local node = state.tree:get_node()
 
              local folder_name = node.type == 'directory' and node.path or (node.path:match("(.*%/).*") or "")
