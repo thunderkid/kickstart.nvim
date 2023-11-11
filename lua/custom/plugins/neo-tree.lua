@@ -44,6 +44,12 @@ return {
                 vim.cmd('silent !' .. tmux_cmd) -- Run the tmux command
               end,
               desc = 'open tmux pane at folder'
+            },
+            ["u"] = {
+              function(state)
+                local node = state.tree:get_node()
+                vim.cmd('silent !code ' .. node.path)
+              end
             }
           }
         }

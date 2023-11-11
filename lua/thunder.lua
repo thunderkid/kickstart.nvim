@@ -97,7 +97,7 @@ end
 vim.keymap.set('n', '<leader>tv', open_in_vscode, { noremap = true, silent = true, desc =  'Open current file in VSCode' })
 vim.keymap.set('n', '<leader>tm', open_tmux_pane_in_current_file_dir, { noremap = true, silent = true, desc =  'Open tmux pane at current directory' })
 
-print("ThunderConfiguration 0.2 reloaded at: " .. os.date("%Y-%m-%d %H:%M:%S"))
+print("ThunderConfiguration 0.3 reloaded at: " .. os.date("%Y-%m-%d %H:%M:%S"))
 -- /thunderstuff
 
 
