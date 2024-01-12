@@ -1,0 +1,4 @@
+To force a reload of plugins, delete ~/.local/share/kickstart.nvim
+
+1/12/24:
+Had problems with luasnip claiming that modules were missing. Force reloading plugins fixed it. 
